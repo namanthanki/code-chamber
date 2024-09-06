@@ -1,9 +1,13 @@
+"use client";
 import { IoClose } from "react-icons/io5";
-import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+import { useAuthModalStore } from "@/app/stores/authModalStore";
+import SignIn from "./SignIn";
 import ResetPassword from "./ResetPassword";
 
 export default function AuthModal() {
+	const { type, close } = useAuthModalStore();
+
 	return (
 		<>
 			<div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60"></div>
@@ -16,10 +20,16 @@ export default function AuthModal() {
 								type="button"
 								className="bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white text-white"
 							>
-								<IoClose className="h-5 w-5" />
+								<IoClose className="h-5 w-5" onClick={close} />
 							</button>
 						</div>
-						<SignUp />
+						{type === "signin" ? (
+							<SignIn />
+						) : type === "signup" ? (
+							<SignUp />
+						) : type === "reset-password" ? (
+							<ResetPassword />
+						) : null}
 					</div>
 				</div>
 			</div>

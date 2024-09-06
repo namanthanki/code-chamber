@@ -1,4 +1,10 @@
+"use client";
+
+import { useAuthModalStore } from "@/app/stores/authModalStore";
+
 export default function SignUp() {
+	const { setType } = useAuthModalStore();
+
 	return (
 		<form className="space-y-5 px-6 pb-6">
 			<h3 className="text-xl font-medium text-white">
@@ -51,7 +57,11 @@ export default function SignUp() {
 			</div>
 			<div className="text-sm font-medium text-gray-500">
 				Already Have an Account?{" "}
-				<a href="#" className="text-blue-700 hover:underline">
+				<a
+					href="#"
+					className="text-blue-700 hover:underline"
+					onClick={() => setType("signin")}
+				>
 					Sign In
 				</a>
 			</div>

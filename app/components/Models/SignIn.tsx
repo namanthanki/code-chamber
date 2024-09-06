@@ -1,4 +1,10 @@
+"use client";
+
+import { useAuthModalStore } from "@/app/stores/authModalStore";
+
 export default function SignIn() {
+	const { setType } = useAuthModalStore();
+
 	return (
 		<form className="space-y-6 px-6 pb-4">
 			<h3 className="text-xl font-medium text-white">
@@ -38,13 +44,18 @@ export default function SignIn() {
 				<a
 					href="#"
 					className="text-sm block text-brand-orange hover:underline w-full text-right"
+					onClick={() => setType("reset-password")}
 				>
 					Forgot Password?
 				</a>
 			</button>
 			<div className="text-sm font-medium text-gray-500">
 				Don&apos;t Have an Account?{" "}
-				<a href="#" className="text-blue-700 hover:underline">
+				<a
+					href="#"
+					className="text-blue-700 hover:underline"
+					onClick={() => setType("signup")}
+				>
 					Sign Up
 				</a>
 			</div>

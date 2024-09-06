@@ -1,6 +1,11 @@
+"use client";
+import AuthModal from "../components/Models/AuthModal";
 import Navbar from "../components/Navbar";
+import { useAuthModalStore } from "../stores/authModalStore";
 
 export default function Auth() {
+	const { isOpen } = useAuthModalStore();
+
 	return (
 		<div className="bg-gradient-to-b from-gray-700 to-black h-screen relative flex flex-col">
 			<Navbar />
@@ -16,6 +21,8 @@ export default function Auth() {
 					</p>
 				</div>
 			</div>
+
+			{isOpen && <AuthModal />}
 		</div>
 	);
 }
