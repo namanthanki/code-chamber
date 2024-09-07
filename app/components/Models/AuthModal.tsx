@@ -10,26 +10,33 @@ export default function AuthModal() {
 
 	return (
 		<>
-			<div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60"></div>
+			<div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
+				<div className="relative w-full max-w-md mx-auto">
+					<div className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 rounded-lg shadow-xl">
+						<button
+							onClick={close}
+							className="absolute top-3 right-3 text-gray-400 hover:text-white"
+						>
+							<IoClose className="h-6 w-6" />
+						</button>
 
-			<div className="w-full sm:w-[450px] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex justify-center items-center">
-				<div className="relative w-full h-full mx-auto flex items-center justify-center">
-					<div className="bg-white rounded-lg shadow relative w-full bg-gradient-to-b from-brand-orange to-slate-900 mx-6">
-						<div className="flex justify-end p-2">
-							<button
-								type="button"
-								className="bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white text-white"
-							>
-								<IoClose className="h-5 w-5" onClick={close} />
-							</button>
+						<div className="px-6 py-8">
+							<h2 className="text-3xl font-bold text-center text-white mb-6">
+								{type === "signin"
+									? "Sign In"
+									: type === "signup"
+									? "Sign Up"
+									: "Reset Password"}
+							</h2>
+
+							{type === "signin" ? (
+								<SignIn />
+							) : type === "signup" ? (
+								<SignUp />
+							) : type === "reset-password" ? (
+								<ResetPassword />
+							) : null}
 						</div>
-						{type === "signin" ? (
-							<SignIn />
-						) : type === "signup" ? (
-							<SignUp />
-						) : type === "reset-password" ? (
-							<ResetPassword />
-						) : null}
 					</div>
 				</div>
 			</div>

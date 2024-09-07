@@ -6,14 +6,11 @@ export default function SignIn() {
 	const { setType } = useAuthModalStore();
 
 	return (
-		<form className="space-y-6 px-6 pb-4">
-			<h3 className="text-xl font-medium text-white">
-				Sign In to Your Account
-			</h3>
+		<form className="space-y-6">
 			<div>
 				<label
 					htmlFor="email"
-					className="text-sm font-medium block mb-2 text-gray-300"
+					className="block text-sm font-medium text-gray-300"
 				>
 					Email
 				</label>
@@ -21,14 +18,14 @@ export default function SignIn() {
 					type="email"
 					name="email"
 					id="email"
-					className="border-2 outline-none sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder:gray-400 text-white"
+					className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
 					placeholder="Enter your email"
 				/>
 			</div>
 			<div>
 				<label
 					htmlFor="password"
-					className="text-sm font-medium block mb-2 text-gray-300"
+					className="block text-sm font-medium text-gray-300"
 				>
 					Password
 				</label>
@@ -36,28 +33,34 @@ export default function SignIn() {
 					type="password"
 					name="password"
 					id="password"
-					className="border-2 outline-none sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder:gray-400 text-white"
+					className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
 					placeholder="Enter your password"
 				/>
 			</div>
-			<button className="flex w-full justify-end">
-				<a
-					href="#"
-					className="text-sm block text-brand-orange hover:underline w-full text-right"
+			<div className="flex items-center justify-between">
+				<button
+					type="button"
+					className="text-sm text-indigo-400 hover:text-indigo-300"
 					onClick={() => setType("reset-password")}
 				>
 					Forgot Password?
-				</a>
-			</button>
-			<div className="text-sm font-medium text-gray-500">
-				Don&apos;t Have an Account?{" "}
-				<a
-					href="#"
-					className="text-blue-700 hover:underline"
+				</button>
+				<button
+					type="submit"
+					className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md transition duration-300"
+				>
+					Sign In
+				</button>
+			</div>
+			<div className="text-sm text-center">
+				<span className="text-gray-400">Don&apos;t have an account? </span>
+				<button
+					type="button"
+					className="text-indigo-400 hover:text-indigo-300"
 					onClick={() => setType("signup")}
 				>
 					Sign Up
-				</a>
+				</button>
 			</div>
 		</form>
 	);
