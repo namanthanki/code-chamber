@@ -1,25 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { useVerifyEmailStore } from "@/app/stores/verifyEmailStore";
+import axios from "axios";
 
 export default function VerifyEmail() {
-	const [isVerifying, setIsVerifying] = useState(true);
-	const [isSuccess, setIsSuccess] = useState(false);
-	const [error, setError] = useState("");
 	const router = useRouter();
 	const params = useSearchParams();
 	const token = params.get("token");
+
+	const {
+		isVerifying,
+		isSuccess,
+		error,
+		setIsVerifying,
+		setIsSuccess,
+		setError,
+	} = useVerifyEmailStore();
 
 	useEffect(() => {
 		const verifyEmail = async () => {
 			if (token) {
 				try {
-					await new Promise((resolve) => setTimeout(resolve, 2000));
-
+					await axios.post("/api/users/verify-email", { token });
 					setIsSuccess(true);
-				} catch (err) {
+				} catch (error) {
 					setError(
 						"Failed to verify email. The link may be invalid or expired."
 					);
