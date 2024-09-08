@@ -57,8 +57,8 @@ export const sendMail = async ({ from, to, emailType }: Params) => {
 				: "Reset Your Password",
 		html:
 			emailType === "verifyEmail"
-				? `<a href="${process.env.DOMAIN}/api/users/verify-email?email=${to.email}&token=${hashedToken}">Click here to verify your email</a>`
-				: `<a href="${process.env.DOMAIN}/api/users/reset-password?email=${to.email}&token=${hashedToken}">Click here to reset your password</a>`,
+				? `<a href="${process.env.DOMAIN}/auth/verify-email?token=${hashedToken}">Click here to verify your email</a>`
+				: `<a href="${process.env.DOMAIN}/auth/reset-password?token=${hashedToken}">Click here to reset your password</a>`,
 	};
 
 	try {
