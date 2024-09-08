@@ -6,8 +6,10 @@ import toast from "react-hot-toast";
 import LoadingSpinner from "../LoadingSpinner";
 import { useEffect } from "react";
 import { useSignInModalStore } from "@/app/stores/signInModalStore";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
+	const router = useRouter();
 	const { setType, close } = useAuthModalStore();
 	const {
 		formData,
@@ -33,6 +35,7 @@ export default function SignIn() {
 				await axios.post("/api/users/login", formData);
 				toast.success("Sign in successful.");
 				close();
+				router.push("/profile");
 			} catch (error: any) {
 				toast.error(error.response.data.error);
 			} finally {
