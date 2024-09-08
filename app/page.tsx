@@ -11,7 +11,6 @@ export default function Auth() {
 
 	return (
 		<div className="bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 min-h-screen relative flex flex-col">
-			<Navbar />
 			<div className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
 				<div className="max-w-4xl w-full space-y-8">
 					<div className="text-center">
