@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@uiw/codemirror-theme-vscode": "^4.23.2",
+    "@uiw/react-codemirror": "^4.23.2",
+    "assert": "^2.1.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
