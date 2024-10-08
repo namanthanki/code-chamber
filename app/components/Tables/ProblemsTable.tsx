@@ -1,14 +1,18 @@
 "use client";
-import { useState } from "react";
-import { problems } from "@/app/mock/problems";
+import React, { useEffect, useState } from "react";
+// import { problems } from "@/app/mock/problems";
 import Link from "next/link";
 import { AiFillYoutube } from "react-icons/ai";
 import { BsCheckCircle, BsXCircle } from "react-icons/bs";
 import YouTube from "react-youtube";
 import { IoClose } from "react-icons/io5";
+import { useProblemsStore } from "@/app/stores/problemsStore";
+import axios from "axios";
 
 export default function ProblemsTable() {
 	const [videoId, setVideoId] = useState(null);
+
+	const { problems } = useProblemsStore();
 
 	return (
 		<>
@@ -26,7 +30,7 @@ export default function ProblemsTable() {
 							className={`hover:bg-gray-700 ${
 								idx % 2 === 1 ? "bg-gray-800" : "bg-gray-900"
 							} transition-colors`}
-							key={problem.id}
+							key={problem._id}
 						>
 							<th className="px-4 py-4 font-medium text-left whitespace-nowrap">
 								{problem.solved ? (
