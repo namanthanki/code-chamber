@@ -11,14 +11,10 @@ export default function ProblemDescription({
 	problem,
 }: ProblemDescriptionProps) {
 	return (
-		<div className="bg-dark-layer-1">
+		<div className="bg-gray-900">
 			{/* TAB */}
-			<div className="flex h-11 w-full items-center pt-2 bg-dark-layer-2 text-white overflow-x-hidden">
-				<div
-					className={
-						"bg-dark-layer-1 rounded-t-[5px] px-5 py-[10px] text-xs cursor-pointer"
-					}
-				>
+			<div className="flex h-11 w-full items-center pt-2 bg-gray-800 text-gray-300 overflow-hidden">
+				<div className="bg-gray-900 rounded-t-lg px-5 py-[10px] text-sm cursor-pointer">
 					Description
 				</div>
 			</div>
@@ -28,34 +24,32 @@ export default function ProblemDescription({
 					{/* Problem heading */}
 					<div className="w-full">
 						<div className="flex space-x-4">
-							<div className="flex-1 mr-2 text-lg text-white font-medium">
+							<div className="flex-1 mr-2 text-xl text-gray-300 font-medium">
 								{problem.title}
 							</div>
 						</div>
 						<div className="flex items-center mt-3">
-							<div
-								className={`text-olive bg-olive inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize `}
-							>
+							<div className="text-olive bg-olive inline-block rounded-full bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize">
 								Easy
 							</div>
-							<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-s text-dark-green-s">
+							<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
 								<BsCheck2Circle />
 							</div>
-							<div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-dark-gray-6">
+							<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
 								<AiFillLike />
 								<span className="text-xs">120</span>
 							</div>
-							<div className="flex items-center cursor-pointer hover:bg-dark-fill-3 space-x-1 rounded p-[3px]  ml-4 text-lg transition-colors duration-200 text-green-s text-dark-gray-6">
+							<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
 								<AiFillDislike />
 								<span className="text-xs">2</span>
 							</div>
-							<div className="cursor-pointer hover:bg-dark-fill-3  rounded p-[3px]  ml-4 text-xl transition-colors duration-200 text-green-s text-dark-gray-6 ">
+							<div className="cursor-pointer hover:bg-gray-800 rounded p-[3px] ml-4 text-xl transition-colors duration-200 text-gray-400">
 								<TiStarOutline />
 							</div>
 						</div>
 
 						{/* Problem Statement(paragraphs) */}
-						<div className="text-white text-sm">
+						<div className="text-gray-300 text-sm mt-4">
 							<div
 								dangerouslySetInnerHTML={{
 									__html: problem.problemStatement,
@@ -66,8 +60,8 @@ export default function ProblemDescription({
 						{/* Examples */}
 						<div className="mt-4">
 							{problem.examples.map((example, index) => (
-								<div key={example.id}>
-									<p className="font-medium text-white ">
+								<div key={example.id} className="mt-4">
+									<p className="font-medium text-gray-300">
 										Example {index + 1}:{" "}
 									</p>
 									{example.img && (
@@ -77,11 +71,9 @@ export default function ProblemDescription({
 											className="mt-3"
 										/>
 									)}
-									<div className="example-card">
-										<pre>
-											<strong className="text-white">
-												Input:{" "}
-											</strong>
+									<div className="example-card bg-gray-800 p-4 rounded-lg mt-2">
+										<pre className="text-gray-300">
+											<strong>Input: </strong>
 											{example.inputText}
 											<br />
 											<strong>Output: </strong>
@@ -103,10 +95,10 @@ export default function ProblemDescription({
 
 						{/* Constraints */}
 						<div className="my-5">
-							<div className="text-white text-sm font-medium">
+							<div className="text-gray-300 text-sm font-medium">
 								Constraints:
 							</div>
-							<ul className="text-white mt-2 ml-5 list-disc">
+							<ul className="text-gray-300 mt-2 ml-5 list-disc">
 								<div
 									dangerouslySetInnerHTML={{
 										__html: problem.constraints,

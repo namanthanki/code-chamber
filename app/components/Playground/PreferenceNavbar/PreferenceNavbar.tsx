@@ -2,32 +2,26 @@ import { AiOutlineFullscreen, AiOutlineSetting } from "react-icons/ai";
 
 export default function PreferenceNavbar() {
 	return (
-		<div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full">
-			<div className="flex items-center text-white">
-				<button className="flex cursor-pointer items-center rounded focus:outline-none bg-dark-fill-3 text-dark-label-2 hover:bg-dark-fill-2 px-2 py-1.5 font-medium">
-					<div className="flex items-center px-1">
-						<div className="text-xs text-label-2 dark:text-dark-label-2">
-							JavaScript
-						</div>
+		<div className="flex items-center justify-between bg-gray-800 h-11 w-full px-4">
+			<div className="flex items-center text-gray-300">
+				<button className="flex cursor-pointer items-center rounded-lg focus:outline-none bg-gray-700 hover:bg-gray-600 px-3 py-1.5 text-sm font-medium transition-colors duration-200">
+					<div className="flex items-center">
+						<div className="text-gray-300">JavaScript</div>
 					</div>
 				</button>
 			</div>
 
-			<div className="flex items-center m-2">
-				<button className="relative rounded px-3 py-1 5 font-medium items-center transition-all foucs:outline-none inline-flex ml-auto p-1 mr-2 hover:bg-dark-fill-3 group">
-					<div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-						<AiOutlineSetting />
-					</div>
-					<div className="absolute w-auto p-2 text-sm m-2 min-w-max translate-x-3 right-0 top-5 z-10 rounded-md shadow-md text-dark-laye-2 bg-gray-200 origin-center scale-0 transition-all duration-100 ease-linear group-hover:scale-100">
+			<div className="flex items-center space-x-4">
+				<button className="relative rounded-lg p-2 text-gray-400 hover:bg-gray-700 transition-colors duration-200 group">
+					<AiOutlineSetting className="h-5 w-5" />
+					<div className="absolute w-auto p-2 text-sm m-2 min-w-max right-0 top-10 z-10 rounded-md shadow-md text-gray-300 bg-gray-800 origin-top-right scale-0 transition-all duration-200 ease-out group-hover:scale-100">
 						Settings
 					</div>
 				</button>
 
-				<button className="relative rounded px-3 py-1 5 font-medium items-center transition-all foucs:outline-none inline-flex ml-auto p-1 mr-2 hover:bg-dark-fill-3 group">
-					<div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-						<AiOutlineFullscreen />
-					</div>
-					<div className="absolute w-auto p-2 text-sm m-2 min-w-max translate-x-3 right-0 top-5 z-10 rounded-md shadow-md text-dark-laye-2 bg-gray-200 origin-center scale-0 transition-all duration-100 ease-linear group-hover:scale-100">
+				<button className="relative rounded-lg p-2 text-gray-400 hover:bg-gray-700 transition-colors duration-200 group">
+					<AiOutlineFullscreen className="h-5 w-5" />
+					<div className="absolute w-auto p-2 text-sm m-2 min-w-max right-0 top-10 z-10 rounded-md shadow-md text-gray-300 bg-gray-800 origin-top-right scale-0 transition-all duration-200 ease-out group-hover:scale-100">
 						Full Screen
 					</div>
 				</button>
