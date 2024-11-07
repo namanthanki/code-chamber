@@ -1,13 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import { problems } from "@/app/mock/problems";
 import Link from "next/link";
 import { AiFillYoutube } from "react-icons/ai";
 import { BsCheckCircle, BsXCircle } from "react-icons/bs";
 import YouTube from "react-youtube";
 import { IoClose } from "react-icons/io5";
 import { useProblemsStore } from "@/app/stores/problemsStore";
-import axios from "axios";
 
 export default function ProblemsTable() {
 	const [videoId, setVideoId] = useState(null);
