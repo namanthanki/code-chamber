@@ -5,6 +5,8 @@ import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import RectangularSkeleton from "../Skeletons/RectangularSkeleton";
 import CircularSkeleton from "../Skeletons/CircularSkeleton";
+import { useAuthStore } from "@/app/stores/authStore";
+import axios from "axios";
 
 type ProblemDescriptionProps = {
 	problem: Problem;
@@ -14,6 +16,17 @@ export default function ProblemDescription({
 	problem,
 }: ProblemDescriptionProps) {
 	const { currentProblem, loading } = useGetCurrentProblem(problem.id);
+	const { liked, disliked, starred, solved, setData } = useGetUserProblemData(
+		problem.id
+	);
+
+	const handleLikeProblem = async () => {
+		try {
+			await axios.post(`/api/users/problems/${problem.id}/like`);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<div className="bg-gray-900">
@@ -52,13 +65,19 @@ export default function ProblemDescription({
 									<BsCheck2Circle />
 								</div>
 								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-									<AiFillLike />
+									<AiFillLike onClick={handleLikeProblem} />
 									<span className="text-xs">
 										{currentProblem?.likes}
 									</span>
 								</div>
 								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-									<AiFillDislike />
+									{liked && (
+										<AiFillDislike className="text-dark-blue-s" />
+									)}
+
+									{!liked && (
+										<AiFillDislike className="text-gray-400" />
+									)}
 									<span className="text-xs">
 										{currentProblem?.dislikes}
 									</span>
@@ -153,11 +172,10 @@ function useGetCurrentProblem(problemId: string) {
 	useEffect(() => {
 		(async () => {
 			try {
-				const response = await fetch(`/api/problems/${problemId}`);
-				const problem = await response.json();
+				const response = await axios.get(`/api/problems/${problemId}`);
 				setCurrentProblem({
-					id: problem._id.toString(),
-					...problem,
+					id: response.data._id.toString(),
+					...response.data,
 				} as DBProblem);
 				setLoading(false);
 			} catch (error) {
@@ -167,4 +185,32 @@ function useGetCurrentProblem(problemId: string) {
 	}, [problemId]);
 
 	return { currentProblem, loading };
+}
+
+function useGetUserProblemData(problemId: string) {
+	const [data, setData] = useState({
+		liked: false,
+		disliked: false,
+		starred: false,
+		solved: false,
+	});
+
+	const { user } = useAuthStore();
+
+	useEffect(() => {
+		(async () => {
+			try {
+				setData({
+					liked: user?.likedProblems?.includes(problemId),
+					disliked: user?.dislikedProblems?.includes(problemId),
+					starred: user?.starredProblems?.includes(problemId),
+					solved: user?.solvedProblems?.includes(problemId),
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+	}, [problemId, user]);
+
+	return { ...data, setData };
 }
