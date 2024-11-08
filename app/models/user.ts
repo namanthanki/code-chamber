@@ -9,6 +9,10 @@ export interface User {
 	forgotPasswordTokenExpiration?: Date;
 	verificationToken?: string;
 	verificationTokenExpiration?: Date;
+	likedProblems?: string[];
+	dislikedProblems?: string[];
+	solvedProblems?: string[];
+	starredProblems?: string[];
 }
 
 export const UserSchema = new mongoose.Schema<User>(
@@ -21,6 +25,10 @@ export const UserSchema = new mongoose.Schema<User>(
 		forgotPasswordTokenExpiration: { type: Date },
 		verificationToken: { type: String },
 		verificationTokenExpiration: { type: Date },
+		likedProblems: { type: [String], default: [] },
+		dislikedProblems: { type: [String], default: [] },
+		solvedProblems: { type: [String], default: [] },
+		starredProblems: { type: [String], default: [] },
 	},
 	{ timestamps: true }
 );
