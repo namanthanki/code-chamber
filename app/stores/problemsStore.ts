@@ -1,23 +1,12 @@
 import axios from "axios";
 import { create } from "zustand";
-
-type Problem = {
-	id: string;
-	title: string;
-	difficulty: string;
-	category: string;
-	order: number;
-	videoId?: string;
-	link?: string;
-	likes: number;
-	dislikes: number;
-};
+import { DBProblem } from "../utils/types/problem";
 
 interface ProblemsStore {
 	loading: boolean;
-	problems: Problem[];
+	problems: DBProblem[];
 	setLoading: (loading: boolean) => void;
-	setProblems: (problems: Problem[]) => void;
+	setProblems: (problems: DBProblem[]) => void;
 	fetchProblems: () => void;
 }
 
