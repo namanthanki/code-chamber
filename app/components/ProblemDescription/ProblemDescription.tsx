@@ -1,7 +1,10 @@
-import { Problem } from "@/app/utils/types/problem";
+import { DBProblem, Problem } from "@/app/utils/types/problem";
+import { useEffect, useState } from "react";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
+import RectangularSkeleton from "../Skeletons/RectangularSkeleton";
+import CircularSkeleton from "../Skeletons/CircularSkeleton";
 
 type ProblemDescriptionProps = {
 	problem: Problem;
@@ -10,6 +13,8 @@ type ProblemDescriptionProps = {
 export default function ProblemDescription({
 	problem,
 }: ProblemDescriptionProps) {
+	const { currentProblem, loading } = useGetCurrentProblem(problem.id);
+
 	return (
 		<div className="bg-gray-900">
 			{/* TAB */}
@@ -28,25 +33,51 @@ export default function ProblemDescription({
 								{problem.title}
 							</div>
 						</div>
-						<div className="flex items-center mt-3">
-							<div className="text-olive bg-olive inline-block rounded-full bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize">
-								Easy
+						{!loading && currentProblem && (
+							<div className="flex items-center mt-3">
+								<div
+									className={
+										"inline-block rounded-full bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize" +
+										(currentProblem?.difficulty === "Easy"
+											? " text-olive bg-olive"
+											: currentProblem?.difficulty ===
+											  "Medium"
+											? " bg-dark-yellow text-dark-yellow"
+											: " bg-dark-pink text-dark-pink")
+									}
+								>
+									{currentProblem?.difficulty}
+								</div>
+								<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
+									<BsCheck2Circle />
+								</div>
+								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
+									<AiFillLike />
+									<span className="text-xs">
+										{currentProblem?.likes}
+									</span>
+								</div>
+								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
+									<AiFillDislike />
+									<span className="text-xs">
+										{currentProblem?.dislikes}
+									</span>
+								</div>
+								<div className="cursor-pointer hover:bg-gray-800 rounded p-[3px] ml-4 text-xl transition-colors duration-200 text-gray-400">
+									<TiStarOutline />
+								</div>
 							</div>
-							<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
-								<BsCheck2Circle />
+						)}
+
+						{loading && (
+							<div className="mt-3 flex space-x-2">
+								<RectangularSkeleton />
+								<CircularSkeleton />
+								<RectangularSkeleton />
+								<RectangularSkeleton />
+								<CircularSkeleton />
 							</div>
-							<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-								<AiFillLike />
-								<span className="text-xs">120</span>
-							</div>
-							<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-								<AiFillDislike />
-								<span className="text-xs">2</span>
-							</div>
-							<div className="cursor-pointer hover:bg-gray-800 rounded p-[3px] ml-4 text-xl transition-colors duration-200 text-gray-400">
-								<TiStarOutline />
-							</div>
-						</div>
+						)}
 
 						{/* Problem Statement(paragraphs) */}
 						<div className="text-gray-300 text-sm mt-4">
@@ -111,4 +142,29 @@ export default function ProblemDescription({
 			</div>
 		</div>
 	);
+}
+
+function useGetCurrentProblem(problemId: string) {
+	const [currentProblem, setCurrentProblem] = useState<DBProblem | null>(
+		null
+	);
+	const [loading, setLoading] = useState<boolean>(true);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const response = await fetch(`/api/problems/${problemId}`);
+				const problem = await response.json();
+				setCurrentProblem({
+					id: problem._id.toString(),
+					...problem,
+				} as DBProblem);
+				setLoading(false);
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+	}, [problemId]);
+
+	return { currentProblem, loading };
 }
