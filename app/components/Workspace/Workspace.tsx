@@ -29,8 +29,8 @@ export default function Workspace({ problem }: WorkspaceProps) {
 				<Confetti
 					gravity={0.3}
 					tweenDuration={4000}
-					width={width - 1}
-					height={height - 1}
+					width={width - 10}
+					height={height - 10}
 				/>
 			)}
 		</Split>
