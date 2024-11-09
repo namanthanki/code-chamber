@@ -4,9 +4,10 @@ import {
 	AiFillLike,
 	AiFillDislike,
 	AiOutlineLoading3Quarters,
+	AiFillStar,
+	AiOutlineStar,
 } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
-import { TiStarOutline } from "react-icons/ti";
 import RectangularSkeleton from "../Skeletons/RectangularSkeleton";
 import CircularSkeleton from "../Skeletons/CircularSkeleton";
 import { useAuthStore } from "@/app/stores/authStore";
@@ -70,6 +71,66 @@ export default function ProblemDescription({
 		}
 	};
 
+	const handleDislikeProblem = async () => {
+		if (updating) return;
+		try {
+			setUpdating(true);
+			await axios.post(`/api/users/problems/${problem.id}/dislike`);
+
+			if (disliked) {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							dislikes: (prev?.dislikes ?? 0) - 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, disliked: false }));
+			} else if (liked) {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							likes: (prev?.likes ?? 0) - 1,
+							dislikes: (prev?.dislikes ?? 0) + 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, liked: false, disliked: true }));
+			} else {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							dislikes: (prev?.dislikes ?? 0) + 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, disliked: true }));
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setUpdating(false);
+		}
+	};
+
+	const handleStarProblem = async () => {
+		if (updating) return;
+		try {
+			setUpdating(true);
+			await axios.post(`/api/users/problems/${problem.id}/star`);
+
+			if (starred) {
+				setData((prev) => ({ ...prev, starred: false }));
+			} else {
+				setData((prev) => ({ ...prev, starred: true }));
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setUpdating(false);
+		}
+	};
+
 	return (
 		<div className="bg-gray-900">
 			{/* TAB */}
@@ -106,18 +167,14 @@ export default function ProblemDescription({
 								<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
 									<BsCheck2Circle />
 								</div>
-								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
+								<div
+									onClick={handleLikeProblem}
+									className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400"
+								>
 									{liked && !updating && (
-										<AiFillLike
-											className="text-dark-blue-s"
-											onClick={handleLikeProblem}
-										/>
+										<AiFillLike className="text-dark-blue-s" />
 									)}
-									{!liked && !updating && (
-										<AiFillLike
-											onClick={handleLikeProblem}
-										/>
-									)}
+									{!liked && !updating && <AiFillLike />}
 									{updating && (
 										<AiOutlineLoading3Quarters className="animate-spin" />
 									)}
@@ -125,20 +182,37 @@ export default function ProblemDescription({
 										{currentProblem?.likes}
 									</span>
 								</div>
-								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-									{disliked && (
+								<div
+									onClick={handleDislikeProblem}
+									className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400"
+								>
+									{disliked && !updating && (
 										<AiFillDislike className="text-dark-blue-s" />
 									)}
 
-									{!disliked && (
-										<AiFillDislike className="text-gray-400" />
+									{!disliked && !updating && (
+										<AiFillDislike />
 									)}
+
+									{updating && (
+										<AiOutlineLoading3Quarters className="animate-spin" />
+									)}
+
 									<span className="text-xs">
 										{currentProblem?.dislikes}
 									</span>
 								</div>
-								<div className="cursor-pointer hover:bg-gray-800 rounded p-[3px] ml-4 text-xl transition-colors duration-200 text-gray-400">
-									<TiStarOutline />
+								<div
+									onClick={handleStarProblem}
+									className="cursor-pointer hover:bg-gray-800 rounded p-[3px] ml-4 text-xl transition-colors duration-200 text-gray-400"
+								>
+									{starred && !updating && (
+										<AiFillStar className="text-dark-yellow" />
+									)}
+									{!starred && !updating && <AiOutlineStar />}
+									{updating && (
+										<AiOutlineLoading3Quarters className="animate-spin" />
+									)}
 								</div>
 							</div>
 						)}
