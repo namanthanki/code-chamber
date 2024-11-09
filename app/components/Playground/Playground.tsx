@@ -3,20 +3,62 @@
 import Split from "react-split";
 import PreferenceNavbar from "./PreferenceNavbar/PreferenceNavbar";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import { javascript } from "@codemirror/lang-javascript";
 import EditorFooter from "./EditorFooter/EditorFooter";
 import { Problem } from "@/app/utils/types/problem";
 import { useState } from "react";
-import { dracula, draculaDarkStyle } from "@uiw/codemirror-theme-dracula";
 import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
+import { problems } from "@/app/utils/problems";
+import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 type PlaygroundProps = {
 	problem: Problem;
+	setSuccess: (success: boolean) => void;
+	setSolved: (solved: boolean) => void;
 };
 
-export default function Playground({ problem }: PlaygroundProps) {
+export default function Playground({
+	problem,
+	setSuccess,
+	setSolved,
+}: PlaygroundProps) {
 	const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
+	const [userCode, setUserCode] = useState<string>(problem.starterCode);
+	const { pid } = useParams();
+
+	const handleSubmit = async () => {
+		try {
+			const cb = new Function(`return ${userCode}`)();
+			console.log(cb);
+			console.log(pid as string);
+			const success = problems[pid as string].handlerFunction(cb);
+			if (success) {
+				await axios.post(`/api/users/problems/${problem.id}/solve`);
+				setSolved(true);
+				toast.success("Congratulations! Your solution is correct.");
+				setSuccess(true);
+				setTimeout(() => {
+					setSuccess(false);
+				}, 3000);
+			}
+		} catch (error: any) {
+			if (
+				error.message.startsWith(
+					"AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal"
+				)
+			) {
+				toast.error("Oops! One or more test cases failed.");
+			} else {
+				toast.error("Oops! Something went wrong.");
+			}
+		}
+	};
+
+	const handleUserCodeChange = (value: string) => {
+		setUserCode(value);
+	};
 
 	return (
 		<div className="flex flex-col bg-gray-900 relative overflow-x-hidden">
@@ -34,6 +76,7 @@ export default function Playground({ problem }: PlaygroundProps) {
 						theme={tokyoNightStorm}
 						extensions={[javascript()]}
 						style={{ fontSize: 16 }}
+						onChange={handleUserCodeChange}
 					/>
 				</div>
 
@@ -85,7 +128,7 @@ export default function Playground({ problem }: PlaygroundProps) {
 				</div>
 			</Split>
 
-			<EditorFooter />
+			<EditorFooter handleSubmit={handleSubmit} />
 		</div>
 	);
 }
