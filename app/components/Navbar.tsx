@@ -4,16 +4,24 @@ import Link from "next/link";
 import { useAuthModalStore } from "../stores/authModalStore";
 import { FaChevronLeft, FaChevronRight, FaCode } from "react-icons/fa";
 import { useAuthStore } from "../stores/authStore";
-import { usePathname, useRouter } from "next/navigation";
+import {
+	useParams,
+	usePathname,
+	useRouter,
+	useSearchParams,
+} from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
 import LoadingSpinner from "./LoadingSpinner";
 import { BsList } from "react-icons/bs";
 import Timer from "./Timer/Timer";
+import { problems } from "../utils/problems";
+import { Problem } from "../utils/types/problem";
 
 export default function Navbar() {
 	const { open } = useAuthModalStore();
 	const router = useRouter();
+	const { pid } = useParams();
 	const pathname = usePathname();
 	const {
 		isInProblemPage,
@@ -60,6 +68,29 @@ export default function Navbar() {
 		setIsLoading(false);
 	};
 
+	const handleProblemChange = (isForward: boolean) => {
+		const { order } = problems[pid as string] as Problem;
+		const direction = isForward ? 1 : -1;
+		const nextProblemOrder = order + direction;
+		const nextProblemKey = Object.keys(problems).find(
+			(key) => problems[key].order === nextProblemOrder
+		);
+
+		if (isForward && !nextProblemKey) {
+			const firstProblemKey = Object.keys(problems).find(
+				(key) => problems[key].order === 1
+			);
+			router.push(`/problems/${firstProblemKey}`);
+		} else if (!isForward && !nextProblemKey) {
+			const lastProblemKey = Object.keys(problems).find(
+				(key) => problems[key].order === Object.keys(problems).length
+			);
+			router.push(`/problems/${lastProblemKey}`);
+		} else {
+			router.push(`/problems/${nextProblemKey}`);
+		}
+	};
+
 	return (
 		<nav className="bg-gray-900 shadow-md">
 			<div className="mx-auto px-8">
@@ -74,7 +105,10 @@ export default function Navbar() {
 
 					{isInProblemPage && (
 						<div className="flex items-center gap-4 flex-1 justify-center">
-							<div className="flex items-center justify-center bg-dark-fill-3 hover:bg-dark-fill-2 rounded h-7 w-7 cursor-pointer">
+							<div
+								onClick={() => handleProblemChange(false)}
+								className="flex items-center justify-center bg-dark-fill-3 hover:bg-dark-fill-2 rounded h-7 w-7 cursor-pointer"
+							>
 								<FaChevronLeft color="lightgray" />
 							</div>
 							<Link
@@ -84,7 +118,10 @@ export default function Navbar() {
 								<BsList />
 								Problem List
 							</Link>
-							<div className="flex items-center justify-center bg-dark-fill-3 hover:bg-dark-fill-2 rounded h-7 w-7 cursor-pointer">
+							<div
+								onClick={() => handleProblemChange(true)}
+								className="flex items-center justify-center bg-dark-fill-3 hover:bg-dark-fill-2 rounded h-7 w-7 cursor-pointer"
+							>
 								<FaChevronRight color="lightgray" />
 							</div>
 						</div>
