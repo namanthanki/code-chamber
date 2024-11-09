@@ -15,10 +15,12 @@ import axios from "axios";
 
 type ProblemDescriptionProps = {
 	problem: Problem;
+	_solved: boolean;
 };
 
 export default function ProblemDescription({
 	problem,
+	_solved,
 }: ProblemDescriptionProps) {
 	const { currentProblem, setCurrentProblem, loading } = useGetCurrentProblem(
 		problem.id
@@ -164,7 +166,7 @@ export default function ProblemDescription({
 								>
 									{currentProblem?.difficulty}
 								</div>
-								{solved && (
+								{(solved || _solved) && (
 									<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
 										<BsCheck2Circle />
 									</div>
