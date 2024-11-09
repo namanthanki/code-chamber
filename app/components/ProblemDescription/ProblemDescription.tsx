@@ -1,6 +1,10 @@
 import { DBProblem, Problem } from "@/app/utils/types/problem";
 import { useEffect, useState } from "react";
-import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import {
+	AiFillLike,
+	AiFillDislike,
+	AiOutlineLoading3Quarters,
+} from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import RectangularSkeleton from "../Skeletons/RectangularSkeleton";
@@ -15,16 +19,54 @@ type ProblemDescriptionProps = {
 export default function ProblemDescription({
 	problem,
 }: ProblemDescriptionProps) {
-	const { currentProblem, loading } = useGetCurrentProblem(problem.id);
+	const { currentProblem, setCurrentProblem, loading } = useGetCurrentProblem(
+		problem.id
+	);
 	const { liked, disliked, starred, solved, setData } = useGetUserProblemData(
 		problem.id
 	);
 
+	const [updating, setUpdating] = useState<boolean>(false);
+
 	const handleLikeProblem = async () => {
+		if (updating) return;
 		try {
+			setUpdating(true);
 			await axios.post(`/api/users/problems/${problem.id}/like`);
+
+			if (liked) {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							likes: (prev?.likes ?? 0) - 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, liked: false }));
+			} else if (disliked) {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							likes: (prev?.likes ?? 0) + 1,
+							dislikes: (prev?.dislikes ?? 0) - 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, liked: true, disliked: false }));
+			} else {
+				setCurrentProblem(
+					(prev) =>
+						({
+							...prev,
+							likes: (prev?.likes ?? 0) + 1,
+						} as DBProblem)
+				);
+				setData((prev) => ({ ...prev, liked: true }));
+			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setUpdating(false);
 		}
 	};
 
@@ -65,17 +107,30 @@ export default function ProblemDescription({
 									<BsCheck2Circle />
 								</div>
 								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-									<AiFillLike onClick={handleLikeProblem} />
+									{liked && !updating && (
+										<AiFillLike
+											className="text-dark-blue-s"
+											onClick={handleLikeProblem}
+										/>
+									)}
+									{!liked && !updating && (
+										<AiFillLike
+											onClick={handleLikeProblem}
+										/>
+									)}
+									{updating && (
+										<AiOutlineLoading3Quarters className="animate-spin" />
+									)}
 									<span className="text-xs">
 										{currentProblem?.likes}
 									</span>
 								</div>
 								<div className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400">
-									{liked && (
+									{disliked && (
 										<AiFillDislike className="text-dark-blue-s" />
 									)}
 
-									{!liked && (
+									{!disliked && (
 										<AiFillDislike className="text-gray-400" />
 									)}
 									<span className="text-xs">
@@ -184,7 +239,7 @@ function useGetCurrentProblem(problemId: string) {
 		})();
 	}, [problemId]);
 
-	return { currentProblem, loading };
+	return { currentProblem, setCurrentProblem, loading };
 }
 
 function useGetUserProblemData(problemId: string) {
