@@ -164,9 +164,11 @@ export default function ProblemDescription({
 								>
 									{currentProblem?.difficulty}
 								</div>
-								<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
-									<BsCheck2Circle />
-								</div>
+								{solved && (
+									<div className="rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-green-500">
+										<BsCheck2Circle />
+									</div>
+								)}
 								<div
 									onClick={handleLikeProblem}
 									className="flex items-center cursor-pointer hover:bg-gray-800 space-x-1 rounded p-[3px] ml-4 text-lg transition-colors duration-200 text-gray-400"
