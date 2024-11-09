@@ -6,7 +6,7 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import EditorFooter from "./EditorFooter/EditorFooter";
 import { Problem } from "@/app/utils/types/problem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tokyoNightStorm } from "@uiw/codemirror-theme-tokyo-night-storm";
 import { problems } from "@/app/utils/problems";
 import { useParams } from "next/navigation";
@@ -25,23 +25,39 @@ export default function Playground({
 	setSolved,
 }: PlaygroundProps) {
 	const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
-	const [userCode, setUserCode] = useState<string>(problem.starterCode);
+	let [userCode, setUserCode] = useState<string>(problem.starterCode);
 	const { pid } = useParams();
+
+	useEffect(() => {
+		const code = localStorage.getItem(`code-${pid}`);
+		console.log(code);
+		setUserCode(code ? JSON.parse(code) : problem.starterCode);
+	}, [pid, problem.starterCode]);
 
 	const handleSubmit = async () => {
 		try {
+			userCode = userCode.slice(
+				userCode.indexOf(problem.starterFunctionName)
+			);
 			const cb = new Function(`return ${userCode}`)();
-			console.log(cb);
-			console.log(pid as string);
-			const success = problems[pid as string].handlerFunction(cb);
-			if (success) {
-				await axios.post(`/api/users/problems/${problem.id}/solve`);
-				setSolved(true);
-				toast.success("Congratulations! Your solution is correct.");
-				setSuccess(true);
-				setTimeout(() => {
-					setSuccess(false);
-				}, 3000);
+			const handler = problems[pid as string].handlerFunction;
+
+			if (typeof handler === "function") {
+				const success = handler(cb);
+				if (success) {
+					await axios.post(`/api/users/problems/${problem.id}/solve`);
+					setSolved(true);
+					toast.success(
+						"Congratulations! Your solution is correct.",
+						{
+							duration: 5000,
+						}
+					);
+					setSuccess(true);
+					setTimeout(() => {
+						setSuccess(false);
+					}, 3000);
+				}
 			}
 		} catch (error: any) {
 			if (
@@ -58,6 +74,7 @@ export default function Playground({
 
 	const handleUserCodeChange = (value: string) => {
 		setUserCode(value);
+		localStorage.setItem(`code-${pid}`, JSON.stringify(value));
 	};
 
 	return (
@@ -72,7 +89,7 @@ export default function Playground({
 			>
 				<div className="w-full overflow-auto p-4">
 					<ReactCodeMirror
-						value={problem.starterCode}
+						value={userCode}
 						theme={tokyoNightStorm}
 						extensions={[javascript()]}
 						style={{ fontSize: 16 }}
