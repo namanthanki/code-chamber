@@ -19,14 +19,25 @@ type PlaygroundProps = {
 	setSolved: (solved: boolean) => void;
 };
 
+export interface ISettings {
+	fontSize: string;
+	settingsModalOpen: boolean;
+	dropdownOpen: boolean;
+}
+
 export default function Playground({
 	problem,
 	setSuccess,
 	setSolved,
 }: PlaygroundProps) {
+	const { pid } = useParams();
 	const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
 	let [userCode, setUserCode] = useState<string>(problem.starterCode);
-	const { pid } = useParams();
+	const [settings, setSettings] = useState<ISettings>({
+		fontSize: "16px",
+		settingsModalOpen: false,
+		dropdownOpen: false,
+	});
 
 	useEffect(() => {
 		const code = localStorage.getItem(`code-${pid}`);
@@ -79,7 +90,7 @@ export default function Playground({
 
 	return (
 		<div className="flex flex-col bg-gray-900 relative overflow-x-hidden">
-			<PreferenceNavbar />
+			<PreferenceNavbar settings={settings} setSettings={setSettings} />
 
 			<Split
 				className="h-[calc(100vh-94px)]"
@@ -92,7 +103,7 @@ export default function Playground({
 						value={userCode}
 						theme={tokyoNightStorm}
 						extensions={[javascript()]}
-						style={{ fontSize: 16 }}
+						style={{ fontSize: settings.fontSize }}
 						onChange={handleUserCodeChange}
 					/>
 				</div>
