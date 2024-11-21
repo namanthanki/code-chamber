@@ -1,6 +1,35 @@
+import { useEffect, useState } from "react";
 import { AiOutlineFullscreen, AiOutlineSetting } from "react-icons/ai";
 
 export default function PreferenceNavbar() {
+	const [isFullScreen, setIsFullScreen] = useState(false);
+
+	const handleFullScreen = () => {
+		if (isFullScreen) {
+			document.exitFullscreen();
+		} else {
+			document.documentElement.requestFullscreen();
+		}
+		setIsFullScreen(!isFullScreen);
+	};
+
+	useEffect(() => {
+		function exitHandler(e: any) {
+			if (!document.fullscreenElement) {
+				setIsFullScreen(false);
+				return;
+			}
+			setIsFullScreen(true);
+		}
+
+		if (document.addEventListener) {
+			document.addEventListener("fullscreenchange", exitHandler);
+			document.addEventListener("webkitfullscreenchange", exitHandler);
+			document.addEventListener("mozfullscreenchange", exitHandler);
+			document.addEventListener("MSFullscreenChange", exitHandler);
+		}
+	}, [isFullScreen]);
+
 	return (
 		<div className="flex items-center justify-between bg-gray-800 h-11 w-full px-4">
 			<div className="flex items-center text-gray-300">
@@ -20,7 +49,10 @@ export default function PreferenceNavbar() {
 				</button>
 
 				<button className="relative rounded-lg p-2 text-gray-400 hover:bg-gray-700 transition-colors duration-200 group">
-					<AiOutlineFullscreen className="h-5 w-5" />
+					<AiOutlineFullscreen
+						className="h-5 w-5"
+						onClick={handleFullScreen}
+					/>
 					<div className="absolute w-auto p-2 text-sm m-2 min-w-max right-0 top-10 z-10 rounded-md shadow-md text-gray-300 bg-gray-800 origin-top-right scale-0 transition-all duration-200 ease-out group-hover:scale-100">
 						Full Screen
 					</div>
