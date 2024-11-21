@@ -35,7 +35,7 @@ export default function SignIn() {
 				await axios.post("/api/users/login", formData);
 				toast.success("Sign in successful.");
 				close();
-				router.push("/profile");
+				router.push("/problems");
 			} catch (error: any) {
 				toast.error(error.response.data.error);
 			} finally {

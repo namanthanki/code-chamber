@@ -1,7 +1,7 @@
 "use client";
 
 import FeatureCard from "./components/Cards/FeatureCard";
-import AuthModal from "./components/Models/AuthModal";
+import AuthModal from "./components/Modals/AuthModal";
 import Navbar from "./components/Navbar";
 import { useAuthModalStore } from "./stores/authModalStore";
 import { FaCode, FaUsers, FaTrophy } from "react-icons/fa";
