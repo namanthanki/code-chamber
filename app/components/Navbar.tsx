@@ -131,14 +131,24 @@ export default function Navbar() {
 						<LoadingSpinner />
 					) : isLoggedIn ? (
 						<div className="flex items-center">
-							<p className="text-white mr-4">
-								Welcome, {user?.name}
+							<p
+								style={{ cursor: "pointer" }}
+								onClick={() => router.push("/profile")}
+								className="text-white mr-4"
+							>
+								{user?.name}
 							</p>
 							{isInProblemPage && (
 								<div className="text-gray-300">
 									<Timer />
 								</div>
 							)}
+							<button
+								onClick={() => router.push("/problems")}
+								className="ml-4 bg-indigo-500 text-white px-4 py-2 rounded-md"
+							>
+								Explore
+							</button>
 							<button
 								onClick={handleLogout}
 								className="ml-4 bg-red-500 text-white px-4 py-2 rounded-md"

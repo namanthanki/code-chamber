@@ -14,5 +14,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/", "/auth/verify-email", "/profile"],
+	matcher: [
+		"/",
+		"/auth/verify-email",
+		"/profile",
+		"/problems/:path*",
+		"/admin/:path*",
+	],
 };

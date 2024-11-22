@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import ProblemsTable from "../components/Tables/ProblemsTable";
 import { useProblemsStore } from "../stores/problemsStore";
+import ProblemFilters from "../components/ProblemFilters/ProblemFilters";
+import ProblemPagination from "../components/ProblemPagination/ProblemPagination";
 
 export default function Problems() {
 	const { loading, fetchProblems } = useProblemsStore();
@@ -26,6 +28,8 @@ export default function Problems() {
 					</h2>
 				</div>
 
+				<ProblemFilters />
+
 				<div className="relative overflow-x-auto mx-auto px-6 pb-10 sm:w-full w-11/12">
 					{loading && (
 						<div className="max-w-[1200px] mx-auto sm:w-7/12 w-full animate-pulse">
@@ -35,43 +39,46 @@ export default function Problems() {
 						</div>
 					)}
 					{!loading && (
-						<table className="table text-sm text-left text-gray-300 dark:text-gray-400 w-full max-w-5xl mx-auto rounded-lg overflow-hidden shadow-lg">
-							<thead className="text-xs bg-gray-800 text-gray-400 uppercase border-b">
-								<tr>
-									<th
-										scope="col"
-										className="px-4 py-3 font-medium text-left"
-									>
-										Status
-									</th>
-									<th
-										scope="col"
-										className="px-6 py-3 font-medium text-left"
-									>
-										Title
-									</th>
-									<th
-										scope="col"
-										className="px-6 py-3 font-medium text-left"
-									>
-										Difficulty
-									</th>
-									<th
-										scope="col"
-										className="px-6 py-3 font-medium text-left"
-									>
-										Category
-									</th>
-									<th
-										scope="col"
-										className="px-6 py-3 font-medium text-left"
-									>
-										Solution
-									</th>
-								</tr>
-							</thead>
-							<ProblemsTable />
-						</table>
+						<>
+							<table className="table text-sm text-left text-gray-300 dark:text-gray-400 w-full max-w-5xl mx-auto rounded-lg overflow-hidden shadow-lg">
+								<thead className="text-xs bg-gray-800 text-gray-400 uppercase border-b">
+									<tr>
+										<th
+											scope="col"
+											className="px-4 py-3 font-medium text-left"
+										>
+											Status
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 font-medium text-left"
+										>
+											Title
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 font-medium text-left"
+										>
+											Difficulty
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 font-medium text-left"
+										>
+											Category
+										</th>
+										<th
+											scope="col"
+											className="px-6 py-3 font-medium text-left"
+										>
+											Solution
+										</th>
+									</tr>
+								</thead>
+								<ProblemsTable />
+							</table>
+							<ProblemPagination />
+						</>
 					)}
 				</div>
 			</main>

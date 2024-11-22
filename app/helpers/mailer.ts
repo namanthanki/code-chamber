@@ -29,28 +29,28 @@ export const sendMail = async ({ from, to, emailType }: Params) => {
 		}
 	}
 
-	// const transporter = nodemailer.createTransport({
-	// 	service: "gmail",
-	// 	port: 465,
-	// 	secure: true,
-	// 	auth: {
-	// 		user: process.env.EMAIL_USER,
-	// 		pass: process.env.EMAIL_PASSWORD,
-	// 	},
-	// });
-
-	const fakeTransporter = nodemailer.createTransport({
-		host: "sandbox.smtp.mailtrap.io",
-		port: 2525,
+	const transporter = nodemailer.createTransport({
+		service: "Gmail",
+		port: 465,
+		secure: true,
 		auth: {
-			user: "cbf30e1dcb1245",
-			pass: "c48da4e0ef5546",
+			user: process.env.EMAIL_USER,
+			pass: process.env.EMAIL_PASSWORD,
 		},
 	});
 
+	// const fakeTransporter = nodemailer.createTransport({
+	// 	host: "sandbox.smtp.mailtrap.io",
+	// 	port: 2525,
+	// 	auth: {
+	// 		user: "cbf30e1dcb1245",
+	// 		pass: "c48da4e0ef5546",
+	// 	},
+	// });
+
 	const mailOptions: MailOptions = {
-		from,
-		to,
+		from: from.trim(),
+		to: to.email.trim(),
 		subject:
 			emailType === "verifyEmail"
 				? "Verify Your Email"
@@ -62,7 +62,7 @@ export const sendMail = async ({ from, to, emailType }: Params) => {
 	};
 
 	try {
-		const info = await fakeTransporter.sendMail(mailOptions);
+		const info = await transporter.sendMail(mailOptions);
 		return info;
 	} catch (error: any) {
 		throw new Error(`Error sending email: ${emailType}/${error.message}`);
