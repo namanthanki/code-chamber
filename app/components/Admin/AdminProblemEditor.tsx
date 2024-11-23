@@ -1,4 +1,3 @@
-// app/components/AdminProblemEditor/AdminProblemEditor.tsx
 "use client";
 
 import { useState, useRef } from "react";
@@ -8,103 +7,45 @@ import axios from "axios";
 import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import toast from "react-hot-toast";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
+import CodeBlock from "@tiptap/extension-code-block";
+import Code from "@tiptap/extension-code";
 
-import {
-	ClassicEditor,
-	AccessibilityHelp,
-	Alignment,
-	AutoLink,
-	Autosave,
-	BlockQuote,
-	Bold,
-	Essentials,
-	GeneralHtmlSupport,
-	Heading,
-	HorizontalLine,
-	Indent,
-	IndentBlock,
-	Italic,
-	Link,
-	List,
-	Paragraph,
-	SelectAll,
-	Strikethrough,
-	Table,
-	TableToolbar,
-	Underline,
-	Undo,
-} from "ckeditor5";
+import "./TipTap.css";
 
-import "ckeditor5/ckeditor5.css";
+// Custom Tiptap Editor component
+const TiptapEditor = ({
+	content,
+	onChange,
+}: {
+	content: string;
+	onChange: (html: string) => void;
+}) => {
+	const editor = useEditor({
+		extensions: [
+			StarterKit,
+			Link.configure({
+				openOnClick: false,
+			}),
+			Code,
+			CodeBlock,
+		],
+		content,
+		editorProps: {
+			attributes: {
+				class: "prose prose-invert max-w-none min-h-[200px] p-4 focus:outline-none",
+			},
+		},
+		onUpdate: ({ editor }) => {
+			onChange(editor.getHTML());
+		},
+	});
 
-const darkEditorStyles = `
-  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
-	padding-left: 2rem;
-	padding-right: 2rem;
-  }
-
-  .ck.ck-list {
-	padding-left: 2rem;
-  }
-
-  .ck.ck-editor__main>.ck-editor__editable {
-    background: #1a1a1a !important;
-    border-color: #4a5568 !important;
-    color: #e2e8f0 !important;
-  }
-
-  .ck.ck-editor__main>.ck-editor__editable.ck-focused {
-    border-color: #4299e1 !important;
-  }
-
-  .ck.ck-toolbar {
-    background: #2d3748 !important;
-    border-color: #4a5568 !important;
-  }
-
-  .ck.ck-toolbar .ck-toolbar__items {
-    background: #2d3748 !important;
-  }
-
-  .ck.ck-button,
-  .ck.ck-button.ck-on {
-    color: #e2e8f0 !important;
-    background: #2d3748 !important;
-  }
-
-  .ck.ck-button:hover,
-  .ck.ck-button.ck-on:hover {
-    background: #4a5568 !important;
-    color: #fff !important;
-  }
-
-  .ck-dropdown__panel {
-    background: #2d3748 !important;
-    border-color: #4a5568 !important;
-  }
-
-  .ck-dropdown__panel .ck-list {
-    background: #2d3748 !important;
-  }
-
-  .ck-dropdown__panel .ck-list .ck-list__item {
-    color: #e2e8f0 !important;
-  }
-
-  .ck-dropdown__panel .ck-list .ck-list__item:hover {
-    background: #4a5568 !important;
-  }
-
-  .ck.ck-list__item.ck-on {
-    background: #4a5568 !important;
-  }
-
-  .ck.ck-icon :not([fill]) {
-    fill: currentColor !important;
-  }
-`;
+	return <EditorContent editor={editor} />;
+};
 
 const defaultProblem: Partial<Problem> = {
 	title: "",
@@ -132,240 +73,14 @@ const CATEGORIES = [
 	"Backtracking",
 ];
 
-export default function AdminProblemEditor({ onClose: onClose }: any) {
+export default function AdminProblemEditor({
+	onClose,
+}: {
+	onClose: () => void;
+}) {
 	const [problem, setProblem] = useState<Partial<Problem>>(defaultProblem);
 	const [loading, setLoading] = useState(false);
 	const formRef = useRef<HTMLFormElement>(null);
-
-	const problemStatementEditorConfig = {
-		toolbar: {
-			items: [
-				"heading",
-				"|",
-				"bold",
-				"italic",
-				"link",
-				"bulletedList",
-				"numberedList",
-				"|",
-				"code",
-				"codeBlock",
-				"|",
-				"undo",
-				"redo",
-			],
-			shouldNotGroupWhenFull: false,
-		},
-		plugins: [
-			AccessibilityHelp,
-			Alignment,
-			AutoLink,
-			Autosave,
-			BlockQuote,
-			Bold,
-			Essentials,
-			GeneralHtmlSupport,
-			Heading,
-			HorizontalLine,
-			Indent,
-			IndentBlock,
-			Italic,
-			Link,
-			List,
-			Paragraph,
-			SelectAll,
-			Strikethrough,
-			Table,
-			TableToolbar,
-			Underline,
-			Undo,
-		],
-		heading: {
-			options: [
-				{
-					model: "paragraph",
-					title: "Paragraph",
-					class: "ck-heading_paragraph",
-				},
-				{
-					model: "heading1",
-					view: "h1",
-					title: "Heading 1",
-					class: "ck-heading_heading1",
-				},
-				{
-					model: "heading2",
-					view: "h2",
-					title: "Heading 2",
-					class: "ck-heading_heading2",
-				},
-				{
-					model: "heading3",
-					view: "h3",
-					title: "Heading 3",
-					class: "ck-heading_heading3",
-				},
-				{
-					model: "heading4",
-					view: "h4",
-					title: "Heading 4",
-					class: "ck-heading_heading4",
-				},
-				{
-					model: "heading5",
-					view: "h5",
-					title: "Heading 5",
-					class: "ck-heading_heading5",
-				},
-				{
-					model: "heading6",
-					view: "h6",
-					title: "Heading 6",
-					class: "ck-heading_heading6",
-				},
-			],
-		},
-		htmlSupport: {
-			allow: [
-				{
-					name: /^.*$/,
-					styles: true,
-					attributes: true,
-					classes: true,
-				},
-			],
-		},
-		initialData: "",
-		link: {
-			addTargetToExternalLinks: true,
-			defaultProtocol: "https://",
-			decorators: {
-				toggleDownloadable: {
-					mode: "manual",
-					label: "Downloadable",
-					attributes: {
-						download: "file",
-					},
-				},
-			},
-		},
-		placeholder: "Type or paste your content here!",
-		table: {
-			contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
-		},
-	};
-
-	const constraintsEditorConfig = {
-		toolbar: {
-			items: [
-				"bulletedList",
-				"numberedList",
-				"|",
-				"code",
-				"|",
-				"undo",
-				"redo",
-			],
-			shouldNotGroupWhenFull: false,
-		},
-		plugins: [
-			AccessibilityHelp,
-			Alignment,
-			AutoLink,
-			Autosave,
-			BlockQuote,
-			Bold,
-			Essentials,
-			GeneralHtmlSupport,
-			Heading,
-			HorizontalLine,
-			Indent,
-			IndentBlock,
-			Italic,
-			Link,
-			List,
-			Paragraph,
-			SelectAll,
-			Strikethrough,
-			Table,
-			TableToolbar,
-			Underline,
-			Undo,
-		],
-		heading: {
-			options: [
-				{
-					model: "paragraph",
-					title: "Paragraph",
-					class: "ck-heading_paragraph",
-				},
-				{
-					model: "heading1",
-					view: "h1",
-					title: "Heading 1",
-					class: "ck-heading_heading1",
-				},
-				{
-					model: "heading2",
-					view: "h2",
-					title: "Heading 2",
-					class: "ck-heading_heading2",
-				},
-				{
-					model: "heading3",
-					view: "h3",
-					title: "Heading 3",
-					class: "ck-heading_heading3",
-				},
-				{
-					model: "heading4",
-					view: "h4",
-					title: "Heading 4",
-					class: "ck-heading_heading4",
-				},
-				{
-					model: "heading5",
-					view: "h5",
-					title: "Heading 5",
-					class: "ck-heading_heading5",
-				},
-				{
-					model: "heading6",
-					view: "h6",
-					title: "Heading 6",
-					class: "ck-heading_heading6",
-				},
-			],
-		},
-		htmlSupport: {
-			allow: [
-				{
-					name: /^.*$/,
-					styles: true,
-					attributes: true,
-					classes: true,
-				},
-			],
-		},
-		initialData: "",
-		link: {
-			addTargetToExternalLinks: true,
-			defaultProtocol: "https://",
-			decorators: {
-				toggleDownloadable: {
-					mode: "manual",
-					label: "Downloadable",
-					attributes: {
-						download: "file",
-					},
-				},
-			},
-		},
-		placeholder: "Type or paste your content here!",
-		table: {
-			contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
-		},
-	};
 
 	const handleInputChange = (
 		e: React.ChangeEvent<
@@ -431,8 +146,6 @@ export default function AdminProblemEditor({ onClose: onClose }: any) {
 
 	return (
 		<div className="max-w-4xl mx-auto p-6">
-			<style>{darkEditorStyles}</style>
-
 			<h1 className="text-2xl font-bold text-white mb-6">
 				Add New Problem
 			</h1>
@@ -509,18 +222,15 @@ export default function AdminProblemEditor({ onClose: onClose }: any) {
 					<label className="block text-sm font-medium text-gray-200 mb-1">
 						Problem Statement
 					</label>
-					<div className="prose prose-invert max-w-none">
-						<CKEditor
-							editor={ClassicEditor}
-							data={problem.problemStatement}
-							onChange={(event, editor) => {
-								const data = editor.getData();
+					<div className="border border-gray-700 rounded bg-gray-800">
+						<TiptapEditor
+							content={problem.problemStatement || ""}
+							onChange={(html) =>
 								setProblem((prev) => ({
 									...prev,
-									problemStatement: data,
-								}));
-							}}
-							config={problemStatementEditorConfig}
+									problemStatement: html,
+								}))
+							}
 						/>
 					</div>
 				</div>
@@ -616,23 +326,19 @@ export default function AdminProblemEditor({ onClose: onClose }: any) {
 					<label className="block text-sm font-medium text-gray-200 mb-1">
 						Constraints
 					</label>
-					<div className="prose prose-invert max-w-none">
-						<CKEditor
-							editor={ClassicEditor}
-							data={problem.constraints}
-							onChange={(event, editor) => {
-								const data = editor.getData();
+					<div className="border border-gray-700 rounded bg-gray-800">
+						<TiptapEditor
+							content={problem.constraints || ""}
+							onChange={(html) =>
 								setProblem((prev) => ({
 									...prev,
-									constraints: data,
-								}));
-							}}
-							config={constraintsEditorConfig}
+									constraints: html,
+								}))
+							}
 						/>
 					</div>
 				</div>
 
-				{/* Code Editors */}
 				<div className="space-y-4">
 					<div>
 						<label className="block text-sm font-medium text-gray-200 mb-1">
