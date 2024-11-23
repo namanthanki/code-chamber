@@ -10,32 +10,36 @@ export default function AuthModal() {
 
 	return (
 		<>
-			<div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50">
-				<div className="relative w-full max-w-md mx-auto">
-					<div className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 rounded-lg shadow-xl">
+			<div className="fixed inset-0 z-50 flex items-center justify-center">
+				<div className="fixed inset-0 bg-black opacity-75"></div>
+
+				<div className="relative w-full max-w-md mx-4">
+					<div className="relative bg-gray-800 rounded-lg shadow-2xl">
 						<button
 							onClick={close}
-							className="absolute top-3 right-3 text-gray-400 hover:text-white"
+							className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
 						>
 							<IoClose className="h-6 w-6" />
 						</button>
 
-						<div className="px-6 py-8">
-							<h2 className="text-3xl font-bold text-center text-white mb-6">
+						<div className="px-8 py-10">
+							<h2 className="text-3xl font-bold text-center text-white mb-8">
 								{type === "signin"
-									? "Sign In"
+									? "Welcome Back"
 									: type === "signup"
-									? "Sign Up"
+									? "Create Account"
 									: "Reset Password"}
 							</h2>
 
-							{type === "signin" ? (
-								<SignIn />
-							) : type === "signup" ? (
-								<SignUp />
-							) : type === "reset-password" ? (
-								<ResetPassword />
-							) : null}
+							<div className="w-full">
+								{type === "signin" ? (
+									<SignIn />
+								) : type === "signup" ? (
+									<SignUp />
+								) : type === "reset-password" ? (
+									<ResetPassword />
+								) : null}
+							</div>
 						</div>
 					</div>
 				</div>
