@@ -23,25 +23,24 @@ export default function Auth() {
 					</p>
 				</div>
 
-				{/* Stats Section */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
 					<div className="bg-gray-800 hover:bg-gray-700 transition-colors rounded-lg p-6 text-center">
 						<div className="text-4xl font-bold text-white mb-2">
-							500+
+							100+
 						</div>
-						<div className="text-gray-300">Active Users</div>
+						<div className="text-gray-300">Test Cases</div>
 					</div>
 					<div className="bg-gray-800 hover:bg-gray-700 transition-colors rounded-lg p-6 text-center">
 						<div className="text-4xl font-bold text-white mb-2">
 							50+
 						</div>
-						<div className="text-gray-300">Coding Challenges</div>
+						<div className="text-gray-300">Unique Problems</div>
 					</div>
 					<div className="bg-gray-800 hover:bg-gray-700 transition-colors rounded-lg p-6 text-center">
 						<div className="text-4xl font-bold text-white mb-2">
-							24/7
+							3
 						</div>
-						<div className="text-gray-300">Community Support</div>
+						<div className="text-gray-300">Difficulty Levels</div>
 					</div>
 				</div>
 
