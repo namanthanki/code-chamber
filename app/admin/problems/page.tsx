@@ -48,9 +48,7 @@ export default function AdminProblems() {
 						) : (
 							<div className="bg-gray-800 p-6 rounded">
 								<AdminProblemEditor
-									problem={editingProblem}
 									onClose={() => setEditorOpen(false)}
-									onSave={handleSave}
 								/>
 							</div>
 						)}
